@@ -1,0 +1,50 @@
+package rs.ac.bg.fon.marko.grid.actuator.entity;
+
+/**
+ *
+ * @author Marko
+ */
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import lombok.*;
+
+@Entity
+@Table(name = "nodes")
+// Lombok anotacija koja u sebi sadrzi 5 anotacija:
+// @Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor(final)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+// Builder design pattern
+@Builder
+public class Node {
+    @Id
+    @Column(length = 50)
+    private String id;
+    
+    @Column(nullable = false, length = 20)
+    private String type; // SOURCE, CONSUMER, HUB, SUBSTATION, STORAGE
+    
+    @Column(name = "max_capacity_mw", precision = 10, scale = 2)
+    private Double maxCapacityMw;
+    
+    @Column(name = "capacity_mwh", precision = 10, scale = 2)
+    private Double capacityMwh; // Samo za STORAGE
+    
+    @Column(name = "base_load", precision = 10, scale = 2)
+    private Double baseLoad; // Samo za CONSUMER
+    
+    @Column(name = "metadata", columnDefinition = "jsonb")
+    private String metadata; // JSON kao String
+    
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+}
