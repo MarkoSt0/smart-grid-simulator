@@ -5,7 +5,7 @@
 package rs.ac.bg.fon.marko.grid.actuator.mapper;
 
 import org.springframework.stereotype.Component;
-import rs.ac.bg.fon.marko.grid.actuator.dto.EdgeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeDTO;
 import rs.ac.bg.fon.marko.grid.actuator.entity.Edge;
 
 /**

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import rs.ac.bg.fon.marko.grid.common.dto.EdgeDTO;
-import rs.ac.bg.fon.marko.grid.common.dto.NodeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
 
 /**
  *

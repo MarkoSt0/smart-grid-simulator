@@ -4,10 +4,16 @@
  */
 package rs.ac.bg.fon.marko.grid.actuator.service;
 
+import rs.ac.bg.fon.marko.grid.common.dto.response.AlertDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeStateDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeStateDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.TelemetryDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.CommandDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
 import java.util.List;
-import rs.ac.bg.fon.marko.grid.actuator.dto.request.*;
-import rs.ac.bg.fon.marko.grid.actuator.dto.response.*;
-import rs.ac.bg.fon.marko.grid.actuator.dto.*;
+import rs.ac.bg.fon.marko.grid.common.dto.request.*;
+import rs.ac.bg.fon.marko.grid.common.dto.response.*;
 
 /**
  *

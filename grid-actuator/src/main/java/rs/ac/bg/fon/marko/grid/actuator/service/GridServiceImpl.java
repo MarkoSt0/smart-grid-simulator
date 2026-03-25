@@ -4,6 +4,13 @@
  */
 package rs.ac.bg.fon.marko.grid.actuator.service;
 
+import rs.ac.bg.fon.marko.grid.common.dto.response.AlertDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeStateDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeStateDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.TelemetryDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.CommandDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,11 +18,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import rs.ac.bg.fon.marko.grid.actuator.dto.*;
-import rs.ac.bg.fon.marko.grid.actuator.dto.request.AlertRequest;
-import rs.ac.bg.fon.marko.grid.actuator.dto.request.CommandRequest;
-import rs.ac.bg.fon.marko.grid.actuator.dto.request.TelemetryBatchRequest;
-import rs.ac.bg.fon.marko.grid.actuator.dto.response.FullStateResponse;
+import rs.ac.bg.fon.marko.grid.common.dto.request.AlertRequest;
+import rs.ac.bg.fon.marko.grid.common.dto.request.CommandRequest;
+import rs.ac.bg.fon.marko.grid.common.dto.request.TelemetryBatchRequest;
+import rs.ac.bg.fon.marko.grid.common.dto.response.FullStateResponse;
 import rs.ac.bg.fon.marko.grid.actuator.entity.*;
 import rs.ac.bg.fon.marko.grid.actuator.mapper.*;
 import rs.ac.bg.fon.marko.grid.actuator.repository.*;

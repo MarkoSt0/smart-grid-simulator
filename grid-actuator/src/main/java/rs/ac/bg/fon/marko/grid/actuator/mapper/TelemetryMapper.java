@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package rs.ac.bg.fon.marko.grid.actuator.mapper;
-import rs.ac.bg.fon.marko.grid.actuator.dto.TelemetryDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.TelemetryDTO;
 import rs.ac.bg.fon.marko.grid.actuator.entity.Telemetry;
 /**
  *
