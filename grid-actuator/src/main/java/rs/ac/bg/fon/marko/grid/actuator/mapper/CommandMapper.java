@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package rs.ac.bg.fon.marko.grid.actuator.mapper;
+import org.springframework.stereotype.Component;
 import rs.ac.bg.fon.marko.grid.common.dto.response.CommandDTO;
 import rs.ac.bg.fon.marko.grid.actuator.entity.Command;
 /**
  *
  * @author Marko
  */
+@Component
 public class CommandMapper {
     public CommandDTO toDto(Command entity) {
         if (entity == null) return null;

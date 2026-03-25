@@ -25,10 +25,12 @@ public class EdgeState {
     @Column(name = "edge_id")
     private Long edgeId;
     
-    @Column(name = "current_flow_mw", precision = 10, scale = 2)
+//    @Column(name = "current_flow_mw", precision = 10, scale = 2)
+    @Column(name = "current_flow_mw")
     private Double currentFlowMw;
     
-    @Column(name = "utilization_percent", precision = 5, scale = 2)
+//    @Column(name = "utilization_percent", precision = 5, scale = 2)
+    @Column(name = "utilization_percent")
     private Double utilizationPercent;
     
     @Column(name = "last_updated")

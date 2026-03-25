@@ -3,12 +3,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package rs.ac.bg.fon.marko.grid.actuator.mapper;
+import org.springframework.stereotype.Component;
 import rs.ac.bg.fon.marko.grid.common.dto.response.AlertDTO;
 import rs.ac.bg.fon.marko.grid.actuator.entity.Alert;
 /**
  *
  * @author Marko
  */
+@Component
 public class AlertMapper {
     public AlertDTO toDto(Alert entity) {
         if (entity == null) return null;

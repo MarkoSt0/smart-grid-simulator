@@ -26,13 +26,15 @@ public class Node {
     @Column(nullable = false, length = 20)
     private String type; // SOURCE, CONSUMER, HUB, SUBSTATION, STORAGE
     
-    @Column(name = "max_capacity_mw", precision = 10, scale = 2)
+    //precision i scale nisu moguci za double, moguca promena u buducnosti
+//    @Column(name = "max_capacity_mw", precision = 10, scale = 2)
+    @Column(name = "max_capacity_mw")
     private Double maxCapacityMw;
     
-    @Column(name = "capacity_mwh", precision = 10, scale = 2)
+    @Column(name = "capacity_mwh")
     private Double capacityMwh; // Samo za STORAGE
     
-    @Column(name = "base_load", precision = 10, scale = 2)
+    @Column(name = "base_load")
     private Double baseLoad; // Samo za CONSUMER
     
     @Column(name = "metadata", columnDefinition = "jsonb")

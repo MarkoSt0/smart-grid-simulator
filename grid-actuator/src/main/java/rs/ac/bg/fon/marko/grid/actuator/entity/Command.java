@@ -30,7 +30,8 @@ public class Command {
     @Column(name = "target_node", length = 50)
     private String targetNode;
     
-    @Column(name = "value", precision = 10, scale = 2)
+//    @Column(name = "value", precision = 10, scale = 2)
+    @Column(name = "value")
     private Double value;
     
     @Column(name = "issued_by", length = 50)

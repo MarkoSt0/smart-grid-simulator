@@ -32,7 +32,8 @@ public class Telemetry {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
     
-    @Column(name = "reported_mw", nullable = false, precision = 10, scale = 2)
+//    @Column(name = "reported_mw", nullable = false, precision = 10, scale = 2)
+    @Column(name = "reported_mw", nullable = false)
     private Double reportedMw;
     
     @Column(name = "metadata", columnDefinition = "jsonb")

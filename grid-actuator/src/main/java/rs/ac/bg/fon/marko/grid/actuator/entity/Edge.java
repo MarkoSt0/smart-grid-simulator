@@ -28,6 +28,7 @@ public class Edge {
     @Column(name = "to_node", nullable = false, length = 50)
     private String toNode;
     
-    @Column(name = "limit_mw", nullable = false, precision = 10, scale = 2)
+//    @Column(name = "limit_mw", nullable = false, precision = 10, scale = 2)
+    @Column(name = "limit_mw", nullable = false)
     private Double limitMw;
 }

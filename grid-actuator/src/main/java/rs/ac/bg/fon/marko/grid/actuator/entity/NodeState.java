@@ -24,10 +24,12 @@ public class NodeState {
     @Column(name = "node_id", length = 50)
     private String nodeId;
     
-    @Column(name = "current_mw", precision = 10, scale = 2)
+//    @Column(name = "current_mw", precision = 10, scale = 2)
+    @Column(name = "current_mw")
     private Double currentMw;
     
-    @Column(name = "current_soc_percent", precision = 5, scale = 2)
+//    @Column(name = "current_soc_percent", precision = 5, scale = 2)
+    @Column(name = "current_soc_percent")
     private Double currentSocPercent;
     
     @Column(name = "last_updated")
