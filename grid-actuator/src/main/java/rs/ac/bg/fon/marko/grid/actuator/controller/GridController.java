@@ -41,6 +41,11 @@ import rs.ac.bg.fon.marko.grid.common.dto.response.*;
 public class GridController {
     
     private final GridService gridService;
+    //Privremena metoda jer springboot regularna nije radila
+    @GetMapping("/test-health")
+    public String manualHealthCheck() {
+        return "{\"status\":\"UP\"}";
+    }
     
     // Topology ENDPOINTS
     

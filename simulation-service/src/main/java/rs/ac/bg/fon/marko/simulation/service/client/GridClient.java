@@ -26,6 +26,6 @@ public interface GridClient {
     @GetMapping("/api/topology/edges")
     List<EdgeDTO> getAllEdges();
 
-    @PostMapping("api/telemetry/batch")
+    @PostMapping("/api/telemetry/batch")
     void sendTelemetryBatch(@RequestBody TelemetryBatchRequest batch);
 }

@@ -4,19 +4,20 @@
  */
 package rs.ac.bg.fon.marko.simulation.service.simulation;
 
-import java.security.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import rs.ac.bg.fon.marko.grid.common.dto.TelemetryReading;
 import rs.ac.bg.fon.marko.grid.common.dto.request.TelemetryBatchRequest;
 import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
-import rs.ac.bg.fon.marko.grid.common.dto.response.NodeStateDTO;
 import rs.ac.bg.fon.marko.simulation.service.client.GridClient;
 import rs.ac.bg.fon.marko.simulation.service.clock.SimulationClock;
 
@@ -33,6 +34,8 @@ public class SimulationService {
     
     private int tickCounter = 0;
     
+    private RestTemplate restTemplate = new RestTemplate();
+    
     /**
      * Glavna simulaciona petlja
      * 
@@ -45,6 +48,10 @@ public class SimulationService {
      */
     @Scheduled(fixedRate = 1000)
     public void runSimulationStep() {
+        if (!isGridActuatorReady()) {
+            log.warn("Simulacija pauzirana - Grid-Actuator nije dostupan...");
+            return; 
+        }
         if (tickCounter >= 96) {
             stopSimulation();
             return;
@@ -145,5 +152,22 @@ public class SimulationService {
     private void stopSimulation() {
         System.out.println("---------------SIMULACIJA ZAVRSENA---------------");
         System.exit(0);
+    }
+    
+    private boolean isGridActuatorReady() {
+        try {
+            String url = "http://localhost:8081/api/test-health";
+
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+            log.info("Provera Actuator-a na {}: Status={}", url, response.getStatusCode());
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody().contains("UP");
+            }
+        } catch (Exception e) {
+            log.error("Actuator nedostupan: {}", e.getMessage());
+        }
+        return false;
     }
 }
