@@ -8,6 +8,8 @@ package rs.ac.bg.fon.marko.grid.actuator.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "nodes")
@@ -37,6 +39,7 @@ public class Node {
     @Column(name = "base_load")
     private Double baseLoad; // Samo za CONSUMER
     
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata; // JSON kao String
     

@@ -6,6 +6,8 @@ package rs.ac.bg.fon.marko.grid.actuator.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 /**
  *
  * @author Marko
@@ -40,6 +42,7 @@ public class Command {
     @Column(name = "executed_at")
     private LocalDateTime executedAt;
     
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata;
     

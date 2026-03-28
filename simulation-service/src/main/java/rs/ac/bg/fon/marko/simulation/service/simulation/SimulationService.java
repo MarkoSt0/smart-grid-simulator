@@ -4,11 +4,19 @@
  */
 package rs.ac.bg.fon.marko.simulation.service.simulation;
 
+import java.security.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import rs.ac.bg.fon.marko.grid.common.dto.TelemetryReading;
+import rs.ac.bg.fon.marko.grid.common.dto.request.TelemetryBatchRequest;
 import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
+import rs.ac.bg.fon.marko.grid.common.dto.response.NodeStateDTO;
 import rs.ac.bg.fon.marko.simulation.service.client.GridClient;
 import rs.ac.bg.fon.marko.simulation.service.clock.SimulationClock;
 
@@ -17,6 +25,7 @@ import rs.ac.bg.fon.marko.simulation.service.clock.SimulationClock;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SimulationService {
     
     private final GridClient gridClient;
@@ -24,109 +33,117 @@ public class SimulationService {
     
     private int tickCounter = 0;
     
-    // Svake 2 sekunde azuriramo bazu u Actuatoru
-    // Imamo 3 funkcije koje daju vrednosti u odnosu na sat
-    // Funkcija potrosaca simulira povecanu potrosnju ujutru i uvece
-    // Funkcija vetra koristi kosinusnu funkciju
-    // Funkcija vode (hidroelektrana) koristi sinusnu funkciju sa malim oscilacijama
-//    @Scheduled(fixedRate = 2000)
-//    public void runSimulationStep() {
-//        int hour = clock.getCurrentHour();
-//        if (tickCounter >= 96) {
-//            stopSimulation();
-//        }
-//        List<NodeDTO> nodes = gridClient.getAllNodes();
-//
-//        // 1. Osvezavanje svih izvora i potrosaca
-//        for (NodeDTO node : nodes) {
-//            if (node.getType().equals("SOURCE")) {
-//                node.setCurrentMw(node.getId().startsWith("WIND") ? 
-//                    calculateWind(node.getMaxCapacityMw(), hour) : 
-//                    calculateHydro(node.getMaxCapacityMw(), hour));
-//            } else if (node.getType().equals("CONSUMER")) {
-//                node.setCurrentMw(calculateConsumer(node.getMaxCapacityMw(), hour));
-//            }
-//        }
-//
-//        // 2. Izracunavanje balansa
-//        double netBalance = calculateNetBalance(nodes);
-//
-//        // 3. Baterije se podesavaju tako da kontrolisu balans
-//        for (NodeDTO node : nodes) {
-//            if (node.getType().equals("STORAGE")) {
-//                updateBatteryState(node, netBalance);
-//                // Smanjujemo netBalance za onoliko koliko je baterija preuzela/dala
-//                netBalance -= node.getCurrentMw(); 
-//            }
-//        }
-//        // 4. Pošalji nazad u Actuator
-//        for (NodeDTO node : nodes) {
-//            gridClient.updateNode(node.getId(), node);
-//        }
-//        tickCounter++;
-//        System.out.println(String.format("[%02d:00] Balans: %.2f MW | Baterija SoC: %.2f%%", 
-//    hour, netBalance, nodes.stream()
-//        .filter(n -> n.getType().equals("STORAGE"))
-//        .findFirst().map(NodeDTO::getCurrentSocPercent).orElse(0.0)));
-//    }
-//
-//    private double calculateConsumer(double max, int h) {
-//        double profile = 0.2 + 0.5 * Math.exp(-Math.pow(h - 8, 2) / 8.0) 
-//                             + 0.7 * Math.exp(-Math.pow(h - 20, 2) / 12.0);
-//        return max * profile * -1; // Potrosnja je uvek negativna
-//    }
-//
-//    private double calculateWind(double max, int h) {
-//        return max * (0.4 + 0.5 * Math.abs(Math.cos(Math.toRadians(h * 15 - 30))));
-//    }
-//    
-//    private double calculateHydro(double max, int h) {
-//        return max * (0.8 + 0.1 * Math.sin(Math.toRadians(h * 15)));
-//    }
-//    
-//    //Za baterije je situacija specificna, potrebno je da prvo izracunamo suficit ili deficit
-//    private double calculateNetBalance(List<NodeDTO> nodes) {
-//        // Baterije se ne racunaju u primarni balans!
-//        return nodes.stream()
-//                .filter(n -> !n.getType().equals("STORAGE"))
-//                .mapToDouble(NodeDTO::getCurrentMw)
-//                .sum();
-//    }
-//    
-//    // Izracunavamo bateriju
-//    private void updateBatteryState(NodeDTO battery, double netBalance) {
-//        // Koliko maksimalno moze da drzi energije, koliko sadrzi i koji procenat
-//        double maxPower = battery.getMaxCapacityMw();
-//        double energyCapacity = battery.getCapacityMwh();
-//        double currentSoc = battery.getCurrentSocPercent();
-//
-//        double chargePower = 0;
-//
-//        if (netBalance > 0) { 
-//            // Ako je visak napuni je, ali ne brze od maksimuma!
-//            chargePower = Math.min(netBalance, maxPower);
-//            if (currentSoc >= 100) chargePower = 0; // Puna je
-//        } else { 
-//            // Ako je manjak u mrezi, praznice se ali ne brze od maksimalne snage praznjenja
-//            chargePower = Math.max(netBalance, -maxPower);
-//            if (currentSoc <= 0) chargePower = 0; // Prazna je
-//        }
-//
-//        // Izracunaj novi SoC (State of Charge)
-//        // Formula: Delta_Energy = Snaga * Vreme(0.25h)
-//        double deltaEnergy = chargePower * 0.25; 
-//        double newSoc = currentSoc + (deltaEnergy / energyCapacity) * 100;
-//
-//        // Ogranicavanje SoC na skali od 0 do 100
-//        battery.setCurrentSocPercent(Math.max(0, Math.min(100, newSoc)));
-//        battery.setCurrentMw(chargePower); 
-//    }
-//
-//    private void stopSimulation() {
-//        System.out.println("========================================");
-//        System.out.println("SIMULACIJA ZAVRŠENA: Jedan dan je prošao.");
-//        System.out.println("Svi podaci su sačuvani u bazi.");
-//        System.out.println("========================================");
-//        System.exit(0);
-//    }
+    /**
+     * Glavna simulaciona petlja
+     * 
+     * Svake 1 sekunde (realnog vremena):
+     * 1. Generise proizvodnju (SOURCE): wind + hydro
+     * 2. Generise potrosnju (CONSUMER): residential zones
+     * 3. Salje batch telemetriju ka Grid-Actuator-u
+     * 
+     * Simulaciono vreme: +15 minuta po tick-u
+     */
+    @Scheduled(fixedRate = 1000)
+    public void runSimulationStep() {
+        if (tickCounter >= 96) {
+            stopSimulation();
+            return;
+        }
+        int hour = clock.getCurrentHour();
+        LocalDateTime simulationTime = clock.getSimulationDateTime();
+        
+        log.debug("Tick #{} - Simulation time: {} (hour {})", 
+                tickCounter, simulationTime.toLocalTime(), hour);
+        // 1. Ucitavanje topologije mreze (cvorove)
+        List<NodeDTO> nodes = gridClient.getAllNodes();
+        
+        // 2. Kreiranje telemetrijskih podataka
+        List<TelemetryReading> tlms = new ArrayList<>();
+        
+        for (NodeDTO node : nodes) {
+            if ("SOURCE".equals(node.getType())) {
+                double production = node.getId().startsWith("WIND") 
+                    ? calculateWind(node.getMaxCapacityMw(), hour) 
+                    : calculateHydro(node.getMaxCapacityMw(), hour);
+                
+                tlms.add(new TelemetryReading(node.getId(), production));
+                
+                log.trace("  {} → {:.2f} MW", node.getId(), production);
+            } else if ("CONSUMER".equals(node.getType())) {
+                double consumption = calculateConsumer(node.getBaseLoad(), hour);
+                
+                tlms.add(new TelemetryReading(node.getId(), consumption));
+                
+                log.trace("  {} → {:.2f} MW", node.getId(), consumption);
+            }
+        }
+        try {
+            gridClient.sendTelemetryBatch(new TelemetryBatchRequest(simulationTime, tlms));
+            log.info("Tick #{}: Sent {} readings for time {}", 
+                    tickCounter, tlms.size(), simulationTime.toLocalTime());
+        } catch (Exception e) {
+            log.error("Failed to send telemetry batch: {}", e.getMessage());
+        }
+        tickCounter++;
+    }
+
+    /**
+     * Simulira potrosnju
+     * 
+     * Karakteristike:
+     * - Jutarnji peak (~8h)
+     * - Vecernji peak (~20h)
+     * - Noćni minimum (~3h)
+     * - Randomizacija ±15%
+     * 
+     * @param baseLoad Bazna potrosnja zone (MW)
+     * @param h Sat dana (0-23)
+     * @return Negativna vrednost (potrosnja uzima energiju)
+     */
+    private Double calculateConsumer(double baseLoad, int h) {
+        double loadNoise = ThreadLocalRandom.current().nextDouble(0.85, 1.15);
+        double profile = 0.2 + 0.5 * Math.exp(-Math.pow(h - 8, 2) / 8.0) 
+                             + 0.7 * Math.exp(-Math.pow(h - 20, 2) / 12.0);
+        return loadNoise * baseLoad * profile * -1;
+    }
+
+    /**
+     * Simulira proizvodnju vetrenjace
+     * 
+     * Karakteristike:
+     * - Kosinusna funkcija (vetar varira tokom dana)
+     * - Peak oko 15h
+     * - Minimum ujutru (oko 6h)
+     * - Randomizacija ±2%
+     * 
+     * @param maxCapacity Maksimalna snaga vetrenjače (MW)
+     * @param h Sat dana (0-23)
+     * @return Pozitivna vrednost (proizvodnja)
+     */
+    private Double calculateWind(double maxCapacity, int h) {
+        double windNoise = ThreadLocalRandom.current().nextDouble(0.98, 1.02);
+        return windNoise * maxCapacity * (0.4 + 0.5 * Math.abs(Math.cos(Math.toRadians(h * 15 - 30))));
+        
+    }
+    
+    /**
+     * Simulira proizvodnju hidroelektrane
+     * 
+     * Karakteristike:
+     * - Sinusna funkcija (kontrolisan protok)
+     * - Stabilnija od vetra (80% bazni load)
+     * - Male oscilacije (±10%)
+     * 
+     * @param maxCapacity Maksimalna snaga hidroelektrane (MW)
+     * @param h Sat dana (0-23)
+     * @return Pozitivna vrednost (proizvodnja)
+     */
+    private Double calculateHydro(double maxCapacity, int h) {
+        return maxCapacity * (0.8 + 0.1 * Math.sin(Math.toRadians(h * 15)));
+    }
+
+    private void stopSimulation() {
+        System.out.println("---------------SIMULACIJA ZAVRSENA---------------");
+        System.exit(0);
+    }
 }

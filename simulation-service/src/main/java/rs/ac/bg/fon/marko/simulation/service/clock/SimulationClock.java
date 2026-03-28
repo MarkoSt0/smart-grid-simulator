@@ -4,6 +4,7 @@
  */
 package rs.ac.bg.fon.marko.simulation.service.clock;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -28,5 +29,13 @@ public class SimulationClock {
             currentMinute = 0;
             currentHour = (currentHour + 1) % 24;
         }
+    }
+    // Fiktivno vreme koje ce da se unosi u bazu
+    public LocalDateTime getSimulationDateTime() {
+        return LocalDateTime.now()
+                .withHour(currentHour)
+                .withMinute(currentMinute)
+                .withSecond(0)
+                .withNano(0);
     }
 }

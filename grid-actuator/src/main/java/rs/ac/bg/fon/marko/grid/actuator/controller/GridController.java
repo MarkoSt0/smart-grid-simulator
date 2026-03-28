@@ -35,7 +35,7 @@ import rs.ac.bg.fon.marko.grid.common.dto.response.*;
 
 
 @RestController
-@RequestMapping("/api/grid")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
 public class GridController {

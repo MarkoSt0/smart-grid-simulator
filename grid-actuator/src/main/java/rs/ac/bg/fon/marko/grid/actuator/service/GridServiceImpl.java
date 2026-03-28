@@ -110,6 +110,7 @@ public class GridServiceImpl implements GridService{
                         .nodeId(reading.getNodeId())
                         .reportedMw(reading.getReportedMw())
                         .timestamp(timestamp)
+                        .metadata("{}")
                         .build())
                 .collect(Collectors.toList());
         

@@ -6,6 +6,8 @@ package rs.ac.bg.fon.marko.grid.actuator.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 /**
  *
@@ -36,6 +38,7 @@ public class Telemetry {
     @Column(name = "reported_mw", nullable = false)
     private Double reportedMw;
     
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "metadata", columnDefinition = "jsonb")
     private String metadata;
     

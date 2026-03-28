@@ -7,9 +7,9 @@ package rs.ac.bg.fon.marko.simulation.service.client;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import rs.ac.bg.fon.marko.grid.common.dto.request.TelemetryBatchRequest;
 import rs.ac.bg.fon.marko.grid.common.dto.response.EdgeDTO;
 import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
 
@@ -20,12 +20,12 @@ import rs.ac.bg.fon.marko.grid.common.dto.response.NodeDTO;
 @FeignClient(name="grid-actuator", url="${services.grid-actuator.url}")
 public interface GridClient {
     
-    @GetMapping("/api/grid/nodes")
+    @GetMapping("/api/topology/nodes")
     List<NodeDTO> getAllNodes();
     
-    @GetMapping("/api/grid/edges")
+    @GetMapping("/api/topology/edges")
     List<EdgeDTO> getAllEdges();
 
-    @PutMapping("/api/grid/nodes/{id}")
-    void updateNode(@PathVariable("id") String id, @RequestBody NodeDTO node);
+    @PostMapping("api/telemetry/batch")
+    void sendTelemetryBatch(@RequestBody TelemetryBatchRequest batch);
 }
