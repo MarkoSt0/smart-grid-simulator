@@ -123,6 +123,19 @@ public class GridServiceImpl implements GridService{
     @Override
     public List<TelemetryDTO> getLatestTelemetry() {
         log.debug("Fetching latest telemetry for all nodes");
+//        LocalDateTime latestTime = telemetryRepository.findLatestTimestamp();
+//        log.info("Latest timestamp is: ${}", latestTime);
+//        if (latestTime == null) {
+//            log.warn("No telemetry data found!");
+//            return List.of();
+//        }
+//        log.debug("Latest timestamp: {}", latestTime);
+//
+//        return telemetryRepository.findByTimestamp(latestTime)
+//                .stream()
+//                .map(telemetryMapper::toDto)
+//                .collect(Collectors.toList());
+        // Stari nacin:
         return telemetryRepository.findLatestByNodeId()
                 .stream()
                 .map(telemetryMapper::toDto)

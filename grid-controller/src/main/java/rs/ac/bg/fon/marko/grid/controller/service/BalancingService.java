@@ -55,6 +55,10 @@ public class BalancingService {
         
         List<TelemetryDTO> telemetry = gridClient.getLatestTelemetry();
         
+        log.info("📡 [CONTROLLER] Received {} telemetry readings", telemetry.size());
+        for (TelemetryDTO t : telemetry) {
+            log.debug("  {} → {} MW", t.getNodeId(), String.format("%.2f", t.getReportedMw()));
+        }
         double netBalance = calculateNetBalance(telemetry);
         log.info("Net balance: {} MW", netBalance);
         

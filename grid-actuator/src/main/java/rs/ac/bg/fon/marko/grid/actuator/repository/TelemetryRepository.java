@@ -16,16 +16,22 @@ import rs.ac.bg.fon.marko.grid.actuator.entity.Telemetry;
  */
 public interface TelemetryRepository extends JpaRepository<Telemetry, Long>{
     //Poslednja sacuvana telemetrija za svaki node
-    @Query("""
-        SELECT t FROM Telemetry t 
-        WHERE t.timestamp = (
-            SELECT MAX(t2.timestamp) 
-            FROM Telemetry t2 
-            WHERE t2.nodeId = t.nodeId
+    @Query(value = """
+        SELECT t.* FROM telemetry t
+        WHERE t.id IN (
+            SELECT MAX(t2.id) 
+            FROM telemetry t2 
+            GROUP BY t2.node_id
         )
-        ORDER BY t.nodeId
-    """)
+        ORDER BY t.node_id
+    """, nativeQuery = true)
     List<Telemetry> findLatestByNodeId();
+    
+//    @Query("SELECT MAX(t.timestamp) FROM Telemetry t")
+//    LocalDateTime findLatestTimestamp();
+//
+//    @Query("SELECT t FROM Telemetry t WHERE t.timestamp = :timestamp ORDER BY t.nodeId")
+//    List<Telemetry> findByTimestamp(@Param("timestamp") LocalDateTime timestamp);
     
     // Sve telemetrije jednog cvora u vremenskom periodu (grafikoni)
     List<Telemetry> findByNodeIdAndTimestampBetweenOrderByTimestampAsc(
