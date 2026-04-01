@@ -40,6 +40,6 @@ public interface GridActuatorClient {
     @PostMapping("/api/commands/execute")
     public void executeCommand(@RequestBody CommandRequest request);
     
-    @PostMapping("/alerts")
+    @PostMapping("/api/alerts")
     public void createAlert(@RequestBody AlertRequest request);
 }

@@ -108,9 +108,11 @@ public class SimulationService {
      * @return Negativna vrednost (potrosnja uzima energiju)
      */
     private Double calculateConsumer(double baseLoad, int h) {
-        double loadNoise = ThreadLocalRandom.current().nextDouble(0.85, 1.15);
-        double profile = 0.2 + 0.5 * Math.exp(-Math.pow(h - 8, 2) / 8.0) 
-                             + 0.7 * Math.exp(-Math.pow(h - 20, 2) / 12.0);
+        double loadNoise = ThreadLocalRandom.current().nextDouble(0.90, 1.10); //Random sum
+//        double profile = 0.2 + 0.5 * Math.exp(-Math.pow(h - 8, 2) / 8.0) 
+//                             + 0.7 * Math.exp(-Math.pow(h - 20, 2) / 12.0);
+        double profile = 0.4 + 0.35 * Math.exp(-Math.pow(h - 8, 2) / 6.0)  //Jutarnji pik
+                        + 0.55 * Math.exp(-Math.pow(h - 20, 2) / 10.0); // Vecernji pik
         return loadNoise * baseLoad * profile * -1;
     }
 
@@ -128,8 +130,8 @@ public class SimulationService {
      * @return Pozitivna vrednost (proizvodnja)
      */
     private Double calculateWind(double maxCapacity, int h) {
-        double windNoise = ThreadLocalRandom.current().nextDouble(0.98, 1.02);
-        return windNoise * maxCapacity * (0.4 + 0.5 * Math.abs(Math.cos(Math.toRadians(h * 15 - 30))));
+        double windNoise = ThreadLocalRandom.current().nextDouble(0.95, 1.05);
+        return windNoise * maxCapacity * (0.1 + 0.8 * Math.abs(Math.cos(Math.toRadians(h * 15 - 30))));
         
     }
     
@@ -146,7 +148,9 @@ public class SimulationService {
      * @return Pozitivna vrednost (proizvodnja)
      */
     private Double calculateHydro(double maxCapacity, int h) {
-        return maxCapacity * (0.8 + 0.1 * Math.sin(Math.toRadians(h * 15)));
+//        return maxCapacity * (0.8 + 0.1 * Math.sin(Math.toRadians(h * 15)));
+        return maxCapacity * (0.55 + 0.05 * Math.sin(Math.toRadians(h * 15)));
+
     }
 
     private void stopSimulation() {

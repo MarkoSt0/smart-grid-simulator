@@ -7,7 +7,7 @@ package rs.ac.bg.fon.marko.grid.common.enums;
 /**
  * Nivo opasnosti alarma
  */
-public enum Severty {
+public enum Severity {
     INFO,       // Informativno
     WARNING,    // Upozorenje (75-90% utilization)
     CRITICAL    // Kriticno (>90% utilization)

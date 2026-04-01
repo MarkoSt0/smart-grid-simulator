@@ -190,7 +190,7 @@ public class GridServiceImpl implements GridService{
     // Commands
     
     /*  
-    *Poziva: SMART-ORCHESTRATOR (mikroservis)
+    *Poziva: GRID-CONTROLLER(mikroservis)
     *Nacin izvrsavanja: Na svakih 2 sekunde poziva metodu da se balansira graf.
         Vrsi izracunavanje balansiranosti grafa, ako je balans presao praga onda
         kreira CommandRequest i salje preko Feign Client-a
